@@ -1,4 +1,6 @@
-const Sequelize = require('sequelize')
+const {
+    Sequelize
+} = require('sequelize')
 const instancia = require('../../bancoDados')
 
 const colunas = {
