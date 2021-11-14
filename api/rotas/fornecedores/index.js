@@ -18,4 +18,48 @@ roteador.post('/', async (requisicao, resposta) => {
     )
 })
 
+roteador.get('/:id', async (requisicao, resposta) => {
+
+    try {
+        const id = requisicao.params.id
+        const fornecedor = new Fornecedor({
+            id: id
+        })
+        await fornecedor.carregar();
+        resposta.send(
+            JSON.stringify(fornecedor)
+        )
+    } catch (erro) {
+        resposta.send(
+            JSON.stringify({
+                mensagem: erro.message
+            })
+        )
+    }
+})
+
+
+roteador.put('/:id', async (requisicao, resposta) => {
+
+        try {
+            const id = requisicao.params.id
+            const dadosRecebidos = requisicao.body
+            const dados = Object.assign({}, dadosRecebidos, {
+                id: id
+            })
+            const fornecedor = new Fornecedor(dados)
+            await fornecedor.atualizar()
+            resposta.end()
+        } catch (erro) {
+            resposta.send(
+                JSON.stringify({
+                    mensagem: erro.message
+                })
+            )
+        }
+
+    }
+
+)
+
 module.exports = roteador
