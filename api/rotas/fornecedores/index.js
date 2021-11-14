@@ -1,5 +1,4 @@
 const roteador = require('express').Router()
-const NotFound = require('../../erros/NotFound')
 const Fornecedor = require('./Fornecedor')
 const TabelaFornecedor = require('./TabelaFornecedor')
 
@@ -11,7 +10,7 @@ roteador.get('/', async (requisicao, resposta) => {
     )
 })
 
-roteador.post('/', async (requisicao, resposta) => {
+roteador.post('/', async (requisicao, resposta, proximo) => {
     try {
         const dadosRecebidos = requisicao.body
         const fornecedor = new Fornecedor(dadosRecebidos)
@@ -21,16 +20,11 @@ roteador.post('/', async (requisicao, resposta) => {
             JSON.stringify(fornecedor)
         )
     } catch (erro) {
-        resposta.status(400)
-        resposta.send(
-            JSON.stringify({
-                mensagem: erro.message
-            })
-        )
+        proximo(erro)
     }
 })
 
-roteador.get('/:id', async (requisicao, resposta) => {
+roteador.get('/:id', async (requisicao, resposta, proximo) => {
 
     try {
         const id = requisicao.params.id
@@ -43,12 +37,7 @@ roteador.get('/:id', async (requisicao, resposta) => {
             JSON.stringify(fornecedor)
         )
     } catch (erro) {
-        resposta.status(404)
-        resposta.send(
-            JSON.stringify({
-                mensagem: erro.message
-            })
-        )
+        proximo(erro)
     }
 })
 
@@ -72,7 +61,7 @@ roteador.put('/:id', async (requisicao, resposta, proximo) => {
     }
 
 )
-roteador.delete('/:id', async (requisicao, resposta) => {
+roteador.delete('/:id', async (requisicao, resposta, proximo) => {
     try {
         const id = requisicao.params.id
         const fornecedor = new Fornecedor({
@@ -83,12 +72,7 @@ roteador.delete('/:id', async (requisicao, resposta) => {
         resposta.status(204)
         resposta.end()
     } catch (erro) {
-        resposta.status(404)
-        resposta.send(
-            JSON.stringify({
-                mensagem: erro.message
-            })
-        )
+        proximo(erro)
     }
 })
 

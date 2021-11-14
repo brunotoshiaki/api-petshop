@@ -7,11 +7,13 @@ const NotFound = require('./erros/NotFound')
 app.use(express.json());
 app.use('/api/fornecedores', roteador)
 app.use((erro, requisicao, resposta, proximo) => {
+    let status = 500
     if (erro instanceof NotFound) {
-        resposta.status(404)
+        status = 404
     } else {
-        resposta.status(400)
+        status = 400
     }
+    resposta.status(status)
 
     resposta.send(
         JSON.stringify({
