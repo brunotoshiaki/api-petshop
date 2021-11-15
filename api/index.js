@@ -5,6 +5,7 @@ const roteador = require('./rotas/fornecedores')
 const NotFound = require('./erros/NotFound')
 const ValorNaoSuportado = require('./erros/ValorNaoSuportado')
 const formatosAceitos = require('./Serializador').formatosAceitos
+const SerializadorErro = require('./Serializador').SerializadorErro
 
 app.use(express.json());
 
@@ -38,8 +39,9 @@ app.use((erro, requisicao, resposta, proximo) => {
     }
     resposta.status(status)
 
+    const serializador = new SerializadorErro(resposta.getHeader('Content-Type'))
     resposta.send(
-        JSON.stringify({
+        serializador.serializar({
             mensagem: erro.message,
             id: erro.idErro
         })
